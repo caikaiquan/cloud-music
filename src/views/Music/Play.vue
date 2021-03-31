@@ -94,13 +94,18 @@ export default defineComponent({
     // 开始播放
     const playMusic = () => {
       const Auto = document.getElementById('audio')
+      console.log(Auto.duration, 'Auto.duration')
+      console.log(Auto.play, 'Auto.play')
       if (Auto.duration && Auto.play) {
         data.duration = Auto.duration
         Auto.play()
       } else {
         setTimeout(() => {
           console.log('playMusic-setTimeout')
-          playMusic()
+          pauseMusic()
+          setTimeout(() => {
+            playMusic('playMusic-setTimeout')
+          },30)
         }, 80)
       }
     }
@@ -112,9 +117,12 @@ export default defineComponent({
     }
     // 切换播放状态
     const changePlay = () => {
+      if(!window.autoPlay){
+        window.autoPlay = true
+        return 
+      }
       data.playing = !data.playing
       if (data.playing) {
-        data.autoPlay = true
         const Auto = document.getElementById('audio')
         IntervalRotate = setInterval(() => {
           if (Auto.currentTime >= data.duration && data.duration !== 0) {
