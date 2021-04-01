@@ -6,9 +6,9 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import '@/assets/css/index.less'
 import '@/util/rem.js'
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 
-const vConsole = new Vconsole();
+// const vConsole = new Vconsole();
 
 
 const app = createApp(App)
@@ -16,5 +16,4 @@ app
 .use(router)
 .use(store)
 .use(Vant)
-.use(vConsole)
 .mount('#app')

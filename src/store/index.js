@@ -4,7 +4,8 @@ export default createStore({
     listData: { 1: 10 },
     num: 10,
     playList: [],
-    playUrl: ''
+    playUrl: '',
+    firstPlay: true,
   },
   mutations: {
     setData (state, value) {
@@ -18,6 +19,9 @@ export default createStore({
     },
     setPlayUrl(state, url){
       state.playUrl = url
+    },
+    changeFirstplay: (state) => {
+      state.firstPlay = false
     }
   },
   actions: {
@@ -43,6 +47,9 @@ export default createStore({
     },
     getPlayUrl(state){
       return state.playUrl
+    },
+    firstPlay(state){
+      return state.firstPlay
     }
   },
   modules: {}

@@ -53,6 +53,9 @@ export default defineComponent({
       sliderValue: 0,
       dragStatus: false, // 是否是拖动的状态
       autoPlay: false, // 是否自动播放
+      firstPlay: computed(() => {
+        return $store.getters.firstPlay
+      })
     })
 
     const onClickLeft = () => {
@@ -94,8 +97,6 @@ export default defineComponent({
     // 开始播放
     const playMusic = () => {
       const Auto = document.getElementById('audio')
-      console.log(Auto.duration, 'Auto.duration')
-      console.log(Auto.play, 'Auto.play')
       if (Auto.duration && Auto.play) {
         data.duration = Auto.duration
         Auto.play()
@@ -105,7 +106,7 @@ export default defineComponent({
           pauseMusic()
           setTimeout(() => {
             playMusic('playMusic-setTimeout')
-          },30)
+          }, 30)
         }, 80)
       }
     }
@@ -117,9 +118,9 @@ export default defineComponent({
     }
     // 切换播放状态
     const changePlay = () => {
-      if(!window.autoPlay){
-        window.autoPlay = true
-        return 
+      if (data.firstPlay) {
+        $store.commit('changeFirstplay')
+        return
       }
       data.playing = !data.playing
       if (data.playing) {

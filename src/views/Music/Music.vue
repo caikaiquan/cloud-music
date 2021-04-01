@@ -45,6 +45,12 @@ export default defineComponent({
       request.get('/playlist/list', { params: option })
         .then(res => {
           if (res.code === 200 && res.playlists && res.playlists.length) {
+            res.playlists = res.playlists.map(item => {
+              if (/^http\:/.test(item.coverImgUrl)) {
+                item.coverImgUrl = item.coverImgUrl.replace(/^http\:/, 'https:')
+              }
+              return item
+            })
             if (type === 'clear') {
               data.playlist = res.playlists
             } else if (!type) {
