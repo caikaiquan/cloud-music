@@ -10,7 +10,7 @@
       <p>{{playlist.name}}</p>
     </div>
     <div class="music-list">
-      <div class="music-item" v-for="(item,index) in tracks" :key="index" @click='playMusic(item.id, item.al.name, item.al.picUrl)'>
+      <div class="music-item" v-for="(item,index) in tracks" :key="index" @click='playMusic(item.id, item.al.picUrl)'>
         <div class="index">{{index + 1}}</div>
         <div class="name-groups">
           <p>{{item.name}}</p>
@@ -50,14 +50,14 @@ export default defineComponent({
         .then(res => {
           if (res.code === 200) {
             data.playlist = res.playlist
-            data.tracks = res.playlist.tracks
+            data.tracks = res.playlist.tracks.map(item => ({...item, picUrl: item.al.picUrl}))
           }
         })
         .catch(err => {
           console.log('err', err)
         })
     }
-    const playMusic = (id, name, url) => {
+    const playMusic = (id, url) => {
       $store.dispatch('setPlayList', data.tracks)
       $store.dispatch('setPlayUrl', url)
       push({ path: '/play', query: { id } })

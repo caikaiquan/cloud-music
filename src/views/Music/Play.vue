@@ -187,7 +187,7 @@ export default defineComponent({
         currentIndex = index < playList.length - 1 ? index + 1 : 0
       }
       data.currentId = playList[currentIndex].id
-      const picUrl = playList[currentIndex].al.picUrl
+      const picUrl = playList[currentIndex].picUrl
       data.picUrl = picUrl
       $store.dispatch('setPlayUrl', picUrl)
       getPlayUrl()

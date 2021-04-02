@@ -48,3 +48,48 @@ export const getDAes = (encrypt) => {
   }).toString(CryptoJS.enc.Utf8);
   return decrypt
 }
+
+// 图片压缩
+export const dealImage = (base64str, w) => {
+  return new Promise((resolve, reject) => {
+    let newImage = new Image()
+    let quality = 1 // 压缩系数 0 - 1之间
+    newImage.src = base64str
+    let imgWidth = 0;
+    let imgHeight = 0;
+    newImage.onload = () => {
+      imgWidth = newImage.width;
+      imgHeight = newImage.height;
+      let canvas = document.createElement('canvas')
+      let ctx = canvas.getContext("2d")
+      if (Math.max(imgWidth, imgHeight) > w) {
+        if (imgWidth > imgHeight) {
+          canvas.width = w
+          canvas.height = w * imgHeight / imgWidth
+        } else {
+          canvas.height = w
+          canvas.width = w * imgWidth / imgHeight
+        }
+      } else {
+        canvas.width = imgWidth
+        canvas.height = imgHeight
+        quality = 0.6
+      }
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(newImage, 0, 0, canvas.width, canvas.height);
+      let base64 = canvas.toDataURL("image/jpeg", quality); //压缩语句
+      console.log(base64.length / 1024, '图片尺寸')
+      // 如想确保图片压缩到自己想要的尺寸,如要求在50-150kb之间，请加以下语句，quality初始值根据情况自定
+      // while (base64.length / 1024 > 150) {
+      //   quality -= 0.01;
+      //   base64 = canvas.toDataURL("image/jpeg", quality);
+      // }
+      // // 防止最后一次压缩低于最低尺寸，只要quality递减合理，无需考虑
+      // while (base64.length / 1024 < 50) {
+      //   quality += 0.001;
+      //   base64 = canvas.toDataURL("image/jpeg", quality);
+      // }
+      resolve(base64)
+    }
+  })
+}

@@ -15,12 +15,17 @@ export default defineComponent({
           text: '音乐',
           path: '/music',
           icon: 'music-o'
-        }
+        },
         // {
-        //   text: '音乐',
-        //   path: '/music1',
-        //   icon: 'fire-o'
+        //   text: '朋友圈',
+        //   path: '/blog',
+        //   icon: 'chat-o'
         // },
+        {
+          text: '我的',
+          path: '/user',
+          icon: 'user-o'
+        },
         // {
         //   text: '音乐',
         //   path: '/music2',

@@ -81,8 +81,8 @@ request.interceptors.response.use(
           userInfo = JSON.parse(userInfo)
           userInfo.token = res.token
         } else {
-          const { islogin, logindate, token } = res
-          userInfo = { islogin, logindate, token }
+          const { islogin, logindate, token, username, id, base64 } = res
+          userInfo = { islogin, logindate, token, username , id, base64  }
         }
         sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
       } else {

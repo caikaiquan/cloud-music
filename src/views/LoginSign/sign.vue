@@ -1,6 +1,6 @@
 <template>
   <div class="sign-login">
-    <van-tabs v-model:active="active" class="container" >
+    <van-tabs v-model:active="active" class="container" v-if='false'>
       <van-tab title="登录">
         <van-form @submit="onLogin">
           <van-field border v-model="username" name="username" label="用户名" placeholder="用户名" :rules="[{ validator: validatorUsername }]" />
@@ -16,7 +16,6 @@
         <van-form @submit="onSign">
           <van-field v-model="user" name="user" label="用户名" placeholder="用户名" :rules="[{ validator: validatorUsername }]" />
           <van-field v-model="psd" :type="psdStatus" name="psd" label="密码" placeholder="密码" :rules="[{ validator: asyncValidator}]" :right-icon="rightIcon1" @click-right-icon="showPsd" />
-          <van-field v-model="psd1" :type="psdStatus1" name="psd" label="确认密码" placeholder="确认密码" :rules="[{ validator: asyncValidator1}]" :right-icon="rightIcon1" @click-right-icon="showPsd1" />
           <div style="margin: 16px;">
             <van-button round block type="primary" native-type="submit">
               注 册
@@ -27,15 +26,16 @@
     </van-tabs>
 
     <div class="container">
-      <van-form @submit="onLogin" v-if='false'>
-        <van-field border v-model="username" name="username" label="用户名" placeholder="用户名" :rules="[{ validator: validatorUsername }]" />
-        <van-field v-model="password" :type="passwordStatus" name="password" label="密码" placeholder="密码" :rules="[{ validator: asyncValidator }]" :right-icon="rightIcon" @click-right-icon="showPassword" />
-        <div style="margin: 16px;">
-          <van-button round block type="primary" native-type="submit">
-            登 录
-          </van-button>
-        </div>
-      </van-form>
+      <van-form @submit="onSign">
+          <van-field v-model="user" name="user" label="用户名" placeholder="用户名" :rules="[{ validator: validatorUsername }]" />
+          <van-field v-model="psd" :type="psdStatus" name="psd" label="密码" placeholder="密码" :rules="[{ validator: asyncValidator}]" :right-icon="rightIcon1" @click-right-icon="showPsd" />
+          <van-field v-model="psd" :type="psdStatus" name="psd" label="确认密码" placeholder="确认密码" :rules="[{ validator: asyncValidator}]" :right-icon="rightIcon1" @click-right-icon="showPsd" />
+          <div style="margin: 16px;">
+            <van-button round block type="primary" native-type="submit">
+              注 册
+            </van-button>
+          </div>
+        </van-form>
     </div>
     <van-icon name="revoke" class="back-btn" @click="onClickLeft" />
   </div>
@@ -58,10 +58,8 @@ export default defineComponent({
       password: '',
       user: '',
       psd: '',
-      psd1: '',
       passwordStatus: 'password', // text password
       psdStatus: 'password',
-      psdStatus1: 'password'
     })
 
     const rightIcon = computed(() => {
@@ -72,10 +70,6 @@ export default defineComponent({
       return data.psdStatus === 'password' ? "closed-eye" : "eye-o"
     })
 
-    const rightIcon2 = computed(() => {
-      return data.psdStatus1 === 'password' ? "closed-eye" : "eye-o"
-    })
-
     const showPassword = () => {
       data.passwordStatus = data.passwordStatus === 'password' ? 'text' : 'password'
     }
@@ -84,14 +78,8 @@ export default defineComponent({
       data.psdStatus = data.psdStatus === 'password' ? 'text' : 'password'
     }
 
-    const showPsd1 = () => {
-      data.psdStatus1 = data.psdStatus1 === 'password' ? 'text' : 'password'
-    }
-
-
-
     const validatorUsername = (value) => {
-      if (!/[\d|a-z|A-Z]{5,12}/.test(value)) {
+      if (!/[\d|a-z|A-Z]{6,12}/.test(value)) {
         return '输入6到12位之间的数字或子母'
       }
     }
@@ -102,26 +90,24 @@ export default defineComponent({
       }
     }
 
-    const asyncValidator1 = (value) => {
-      if(data.psd !== data.psd1){
-        return '两次输入的密码不一致'
-      }
-      if (!/[\d|a-zA-Z|@!&_.]{6,12}/.test(value)) {
-        return '输入6到12位之间的数字或子母'
-      }
-    }
-
-    
-
     const onLogin = (values) => {
       const data = { ...values, password: getAES(values.password) }
       request.post('/user/login', data)
         .then(res => {
           if (res.code === '0000') {
-            const { islogin, logindate, token, username , id , base64 } = res
-            const userInfo = { islogin, logindate, token, username , id , base64 }
+            // Toast.loading({
+            //   duration: 1000, // 持续展示1.5s
+            //   forbidClick: true,
+            //   message: '登录成功',
+            //   onClose: () => {
+            //     Toast.clear()
+            //     push({ path: '/music' })
+            //   }
+            // });
+            const { islogin, logindate, token, username , id} = res
+            const userInfo = { islogin, logindate, token, username , id }
             $store.commit('setUserInfo', userInfo)
-            push('/user')
+            history.go(-1)
           }
         })
         .catch(err => {
@@ -134,16 +120,12 @@ export default defineComponent({
       request.post('/user/sign', data)
         .then(res => {
           if (res.code === '0000') {
-            const { islogin, logindate, token, username , id } = res
-            const userInfo = { islogin, logindate, token, username , id  }
-            $store.commit('setUserInfo', userInfo)
             Toast.loading({
               duration: 1000, // 持续展示1.5s
               forbidClick: true,
               message: '注册成功',
               onClose: () => {
                 Toast.clear()
-
                 // push({ path: '/music' })
                 history.go(-1)
               }
@@ -166,14 +148,11 @@ export default defineComponent({
       ...toRefs(data),
       rightIcon,
       rightIcon1,
-      rightIcon2,
       onLogin,
       onSign,
       showPassword,
       showPsd,
-      showPsd1,
       asyncValidator,
-      asyncValidator1,
       validatorUsername,
       onClickLeft
     }

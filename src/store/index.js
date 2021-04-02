@@ -1,11 +1,16 @@
 import { createStore } from "vuex";
+
+const userJson = sessionStorage.getItem('userInfo')
+const userInfo = userJson ? JSON.parse(userJson) : {};
 export default createStore({
   state: {
+    userInfo,
     listData: { 1: 10 },
     num: 10,
     playList: [],
     playUrl: '',
     firstPlay: true,
+    
   },
   mutations: {
     setData (state, value) {
@@ -22,6 +27,9 @@ export default createStore({
     },
     changeFirstplay: (state) => {
       state.firstPlay = false
+    },
+    setUserInfo: ( state, userinfo ) => {
+      state.userInfo = userinfo
     }
   },
   actions: {
@@ -50,6 +58,9 @@ export default createStore({
     },
     firstPlay(state){
       return state.firstPlay
+    },
+    userInfo(state) {
+      return state.userInfo
     }
   },
   modules: {}
