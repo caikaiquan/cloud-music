@@ -16,11 +16,11 @@ export default defineComponent({
           path: '/music',
           icon: 'music-o'
         },
-        // {
-        //   text: '朋友圈',
-        //   path: '/blog',
-        //   icon: 'chat-o'
-        // },
+        {
+          text: '发现',
+          path: '/blog',
+          icon: 'fire-o'
+        },
         {
           text: '我的',
           path: '/user',

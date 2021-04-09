@@ -47,6 +47,11 @@ const routes = [
     meta: { title: '朋友圈' }
   },
   {
+    path: '/edit',
+    component: () => import('@/views/Edit/Edit.vue'),
+    meta: { title: '发布' }
+  },
+  {
     redirect: '/music'
   }
 ]

@@ -17,7 +17,7 @@ export default defineConfig({
       // 选项写法
       // '/api': 'https://music.163.com'//代理网址
       '/api': {
-        target: 'http://172.27.35.1:6060', // http://172.20.246.1:6060 // http://www.mybeta.ule.com:6060
+        target: 'https://www.caikaiquan.xyz', // http://172.20.246.1:6060 // http://www.mybeta.ule.com:6060
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
