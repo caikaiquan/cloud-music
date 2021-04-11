@@ -1,5 +1,5 @@
 <template>
-  <van-swipe :autoplay="3000" lazy-render>
+  <van-swipe :autoplay="3000" lazy-render class="swipe-box-container">
     <van-swipe-item v-for="item in images" :key="item.id">
       <img :src="item.url" />
     </van-swipe-item>
@@ -34,7 +34,7 @@ export default defineComponent({
 </script>
 
 <style lang='less'>
-.van-swipe {
+.swipe-box-container  {
   height: 150px;
   .van-swipe-item {
     img {

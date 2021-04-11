@@ -53,7 +53,7 @@ export const getDAes = (encrypt) => {
 export const dealImage = (base64str, w) => {
   return new Promise((resolve, reject) => {
     let newImage = new Image()
-    let quality = 1 // 压缩系数 0 - 1之间
+    let quality = 0.9 // 压缩系数 0 - 1之间
     newImage.src = base64str
     let imgWidth = 0;
     let imgHeight = 0;
@@ -73,7 +73,7 @@ export const dealImage = (base64str, w) => {
       } else {
         canvas.width = imgWidth
         canvas.height = imgHeight
-        quality = 0.6
+        quality = 0.9
       }
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(newImage, 0, 0, canvas.width, canvas.height);
@@ -92,4 +92,24 @@ export const dealImage = (base64str, w) => {
       resolve(base64)
     }
   })
+}
+
+export const formatTime = (date = new Date(), format = "yyyy-MM-dd HH:mm:ss") => {
+  const reg = {
+    "y{4}": date.getFullYear(),
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'H+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds()
+  }
+
+  for(let regKey in reg){
+    if(new RegExp(`(${regKey})`).test(format)){
+      const value = reg[regKey].toString().length === 1 ? `0${reg[regKey]}` : reg[regKey]
+      format = format.replace(RegExp.$1, value)
+    }
+  }
+
+  return format
 }

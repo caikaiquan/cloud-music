@@ -1,23 +1,20 @@
 <template>
   <div class="blog-list">
-    <div class="blog-card" v-for='index in [1,2,3,4,5]' :key='index'>
+    <div class="blog-card" v-for="item in blogList" :key="item['_id']">
       <div class="user-info">
-        <img :src="userImg" alt="">
-        <p class="user-name">Admin</p>
-        <p class="create-time">2021-04-02 17:36:23</p>
+        <img :src="item.userImg" alt="" />
+        <p class="user-name">{{item.username}}</p>
+        <p class="create-time">{{item.createTime}}</p>
       </div>
-      <div class="comment-text">
-        这里记录的是一段评论
-      </div>
-      <van-grid :border='false' :column-num="3" gutter='5' class="img-list">
-        <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-1.jpg" />
-        </van-grid-item>
-        <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-2.jpg" />
-        </van-grid-item>
-        <van-grid-item>
-          <van-image src="https://img.yzcdn.cn/vant/apple-3.jpg" />
+      <div class="comment-text">{{item.common}}</div>
+      <van-grid
+        :border="false"
+        :column-num="3"
+        gutter="5"
+        class="img-list"
+      >
+        <van-grid-item v-for='(img, i) in item.imgList' :key='i' @click='showImages(item.imgList, i)'>
+          <van-image :src="img" />
         </van-grid-item>
       </van-grid>
       <div class="comment">
@@ -31,7 +28,11 @@
 
 <script>
 import { defineComponent, getCurrentInstance, reactive, toRefs } from 'vue'
+import { ImagePreview } from 'vant'
 export default defineComponent({
+  props: {
+    blogList: Array
+  },
   setup () {
     const { ctx } = getCurrentInstance()
     const $store = ctx.$store
@@ -40,8 +41,17 @@ export default defineComponent({
     const data = reactive({
       userImg
     })
+
+    const showImages = (list, index) => {
+      ImagePreview({
+        images: list,
+        startPosition: index,
+      });
+    }
+
     return {
-      ...toRefs(data)
+      ...toRefs(data),
+      showImages
     }
   }
 })
@@ -53,7 +63,7 @@ export default defineComponent({
     padding: 10px;
     background: #fff;
     position: relative;
-    &+.blog-card{
+    & + .blog-card {
       margin-top: 10px;
     }
     .user-info {
@@ -79,7 +89,7 @@ export default defineComponent({
       margin-top: 10px;
     }
 
-    .img-list{
+    .img-list {
       margin: 10px -5px;
     }
 
@@ -89,9 +99,9 @@ export default defineComponent({
       position: absolute;
       top: 20px;
       right: 20px;
-      .comment-box{
+      .comment-box {
         display: flex;
-        p{
+        p {
           margin-left: 10px;
         }
       }

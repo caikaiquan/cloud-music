@@ -14,7 +14,8 @@
         </van-col>
       </van-row>
       <div class="content">
-        <blog-list></blog-list>
+        <blog-list :blogList='blogList' v-if='blogList.length'></blog-list>
+        <van-empty description="暂无发布" v-if='!blogList.length'/>
       </div>
     </div>
     <Footer></Footer>
@@ -22,17 +23,21 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from 'vue'
+import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import Footer from '@/components/Footer.vue'
 import BlogList from '@/components/BlogList.vue'
 import { useRouter } from 'vue-router'
+import request from '@/util/axios'
+import { formatTime } from '@/util/common'
+
 export default defineComponent({
   components: { Footer, BlogList },
   setup () {
     const { push } = useRouter()
 
     const data = reactive({
-      value: ''
+      value: '',
+      blogList: []
     })
 
     const onSearch = (value) => {
@@ -42,6 +47,22 @@ export default defineComponent({
     const handleEdit = () => {
       push('/edit')
     }
+
+    const getBlogList = () => {
+      request.post('/blog/list')
+      .then(res => {
+        if(res.code === '0000') {
+          data.blogList = res.data.map(item => ({...item, createTime: formatTime(new Date(item.createTime))}))
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
+    onMounted(() => {
+      getBlogList()
+    })
 
     return {
       ...toRefs(data),
@@ -83,7 +104,7 @@ export default defineComponent({
       width: 100%;
       height: calc(100% - 44px);
       overflow-y: auto;
-      background: #ccc;
+      background: #f5f5f5;
     }
   }
 }
